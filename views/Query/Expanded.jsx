@@ -19,6 +19,7 @@ export default React.createClass({
    * On Input text change
    */
   handleInputChange(event) {
+    console.log("expanded");
     this.setState({ query: {
       text: event.target.value,
       date: {
@@ -31,12 +32,19 @@ export default React.createClass({
    * On Input text key press
    */
   handleKeyPress(event) {
-    if (event.key === 'Enter' && event.target.value.match(/[^\s]+/)) {
+    console.log('hello');
+    if (event.key === 'Enter' && event.target.value.match(/[^\s]+/)) 
+    {
+    
       this.props.onQueryChange(this.state.query);
     }
   },
   handleSearchClick() {
-    if (this.state.query && this.state.query.text.match(/[^\s]+/)) {
+    //if (this.state.query && this.state.query.text.match(/[^\s]+/))
+    console.log("query is :: "+this.state.query);
+    if (this.state.query)  
+    {
+      console.log("hello")
       this.props.onQueryChange(this.state.query);
     }
   },
@@ -48,11 +56,10 @@ export default React.createClass({
           <div className="query--left">
             <div className="query--search-container">
               <TextInput
-                placeholder="What company are you interested in?"
+                placeholder="search Drugs"
                 onKeyPress={this.handleKeyPress}
                 onInput={this.handleInputChange}
-                defaultValue={this.state.query ? this.state.query.text : null}
-              />
+                defaultValue={this.state.query ? this.state.query.text : null}/>
               <div onClick={this.handleSearchClick} className="query--icon-container">
                 <Icon type="search" size="regular" fill="#ffffff" />
               </div>

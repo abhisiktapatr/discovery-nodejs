@@ -11,8 +11,8 @@ import NoResults from './NoResults/index.jsx';
 
 const hasResults = (entities) =>
   entities.aggregations && entities.aggregations.length > 0 &&
-  entities.aggregations[0].field === 'enrichedTitle.entities.text';
-
+  //entities.aggregations[0].field === 'enrichedTitle.entities.text';
+entities.aggregations[0].field === 'enriched_text.entities.text';
 const parseQueryResults = (data) => {
   const parsedData = {
     results: data.results, // Top Results
@@ -24,26 +24,34 @@ const parseQueryResults = (data) => {
 
   data.aggregations.forEach((aggregation) => {
     // sentiments by source
-    if (aggregation.type === 'term' && aggregation.field.startsWith('blekko.basedomain')) {
+    /*if (aggregation.type === 'term' && aggregation.field.startsWith('blekko.basedomain')) {
       parsedData.sentiments = aggregation;
-    }
+    }*/
     // Overall sentiment
     if (aggregation.type === 'term' && aggregation.field.startsWith('docSentiment')) {
       parsedData.sentiment = aggregation;
     }
 
-    if (aggregation.type === 'term' && aggregation.field === 'enrichedTitle.concepts.text') {
+    /*if (aggregation.type === 'term' && aggregation.field === 'enrichedTitle.concepts.text') {
+      parsedData.entities.topics = aggregation.results;
+    }*/
+     if (aggregation.type === 'term' && aggregation.field === 'enriched_text.concepts.text') {
       parsedData.entities.topics = aggregation.results;
     }
 
     // Mentions and sentiments
-    if (aggregation.type === 'filter' &&
+    /*if (aggregation.type === 'filter' &&
       'aggregations' in aggregation &&
       aggregation.aggregations[0].field === 'enrichedTitle.entities.text') {
       parsedData.mentions = aggregation;
+    }*/
+    if (aggregation.type === 'filter' &&
+      'aggregations' in aggregation &&
+      aggregation.aggregations[0].field === 'enriched_text.entities.text') {
+      parsedData.mentions = aggregation;
     }
 
-    if (aggregation.type === 'nested' && aggregation.path === 'enrichedTitle.entities') {
+   /* if (aggregation.type === 'nested' && aggregation.path === 'enrichedTitle.entities') {
       const entities = aggregation.aggregations;
       if (entities && entities.length > 0 && hasResults(entities[0])) {
         if (entities[0].match === 'enrichedTitle.entities.type:Company') {
@@ -51,6 +59,17 @@ const parseQueryResults = (data) => {
         }
         if (entities[0].match === 'enrichedTitle.entities.type:Person') {
           parsedData.entities.people = entities[0].aggregations[0].results;
+        }
+         if (entities[0].match === 'enriched_text.entities.type:Drug') {
+          parsedData.entities.companies = entities[0].aggregations[0].results;
+        }
+      }*/
+       if (aggregation.type === 'nested' && aggregation.path === 'enriched_text.entities') {
+      const entities = aggregation.aggregations;
+      if (entities && entities.length > 0 && hasResults(entities[0])) {
+        
+         if (entities[0].match === 'enriched_text.entities.type:Drug') {
+          parsedData.entities.companies = entities[0].aggregations[0].results;
         }
       }
     }
@@ -72,6 +91,7 @@ export default React.createClass({
   },
 
   handleQueryChange(query) {
+
     this.fetchNewData(query);
   },
   /**
@@ -89,6 +109,7 @@ export default React.createClass({
         response.json()
           .then((json) => {
             this.setState({ loading: false, data: parseQueryResults(json) });
+
           });
       } else {
         response.json()
@@ -104,9 +125,11 @@ export default React.createClass({
     });
     // scroll to the loading bar
     window.scrollTo(100, 344);
+    
   },
 
   render() {
+
     return (
       <div>
         <Query onQueryChange={this.handleQueryChange} query={this.state.query} />
@@ -122,6 +145,7 @@ export default React.createClass({
             <div className="_container _container_large">
               <div className="row">
                 <div className="results--panel-1">
+
                   <TopEntities
                     query={this.state.query}
                     entities={this.state.data.entities}

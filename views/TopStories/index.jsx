@@ -72,7 +72,8 @@ export default React.createClass({
               {this.props.stories.map(item =>
                 <Story
                   key={item.id}
-                  title={item.enrichedTitle ? item.enrichedTitle.text : (item.title || 'Untitled')}
+                  /*title={item.enrichedTitle ? item.enrichedTitle.text : (item.title || 'Untitled')}*/
+                  title={item.enriched_text ? item.enriched_text.text : (item.title || 'Untitled')}
                   url={item.url}
                   host={item.host}
                 />)

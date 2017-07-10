@@ -24,12 +24,12 @@ const discovery = new DiscoveryV1({
   // If unspecified here, the DISCOVERY_USERNAME and
   // DISCOVERY_PASSWORD env properties will be checked
   // After that, the SDK will fall back to the bluemix-provided VCAP_SERVICES environment property
-  // username: '<username>',
-  // password: '<password>',
-  version_date: '2016-11-09',
+   username:'2caa7545-7d6f-4e65-81b0-7011347cb0d5',
+   password:'dwwwEksluCTc',
+  version_date:'2016-11-09',
   path: {
-    environment_id: process.env.ENVIRONMENT_ID || '<environment-id>',
-    collection_id: process.env.COLLECTION_ID || '<collection-id>',
+    environment_id:'d4f06a96-3919-4b1e-9dac-95a76fd619a7',
+    collection_id:'84124fd7-2eee-4804-b890-8aeb4fe79ba3'
   },
   qs: { aggregation: `[${queryBuilder.aggregations.join(',')}]` },
 });
@@ -49,8 +49,11 @@ app.post('/api/query', (req, res, next) => {
   discovery.query(params, (error, response) => {
     if (error) {
       next(error);
+      console.log("Error:" + error)
     } else {
+      
       res.json(response);
+      //console.log(JSON.stringify(response,null,2));
     }
   });
 });

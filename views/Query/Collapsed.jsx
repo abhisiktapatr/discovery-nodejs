@@ -92,6 +92,7 @@ export default React.createClass({
     }
   },
   handleSearchClick() {
+    console.log("query is"+this.state.query)
     if (this.state.query && this.state.query.text.match(/[^\s]+/)) {
       this.props.onQueryChange({
         text: this.state.query.text,
